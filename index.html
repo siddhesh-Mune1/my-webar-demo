@@ -1,0 +1,98 @@
+<!-- HTML (in the HTML section) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ModelViewer AR Demo</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      padding: 1rem;
+      background: #333;
+      color: white;
+      text-align: center;
+    }
+    main {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f2f2f2;
+    }
+    model-viewer {
+      width: 80vw;
+      height: 60vh;
+      background-color: #e0e0e0;
+      border: 2px solid #999;
+    }
+    #ar-button {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      padding: 0.6rem 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ModelViewer AR Demo</h1>
+  </header>
+  <main>
+    <model-viewer
+      id="mviewer"
+      src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+      ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+      alt="A 3D astronaut"
+      ar
+      ar-scale="fixed"
+      ar-placement="floor"
+      xr-environment
+      environment-image="neutral"
+      camera-controls
+      shadow-intensity="1"
+    ></model-viewer>
+
+    <button id="ar-button">View in AR</button>
+  </main>
+
+  <script>
+    const mviewer = document.getElementById('mviewer');
+    const arButton = document.getElementById('ar-button');
+
+    mviewer.addEventListener('ar-status', (event) => {
+      const status = event.detail.status;
+      if (status === 'not-presenting') {
+        arButton.style.display = 'block';
+      } else {
+        arButton.style.display = 'none';
+      }
+    });
+
+    arButton.addEventListener('click', () => {
+      mviewer.activateAR();
+    });
+
+    mviewer.addEventListener('session-started', () => {
+      console.log('AR session started');
+    });
+    mviewer.addEventListener('session-ended', () => {
+      console.log('AR session ended');
+    });
+  </script>
+</body>
+</html>
